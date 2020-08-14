@@ -1,4 +1,4 @@
-package ctx_test
+package ctxutils_test
 
 import (
 	"context"
@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ZergsLaw/ctx"
+	"github.com/ZergsLaw/ctxutils"
 	"github.com/stretchr/testify/require"
 )
 
@@ -59,7 +59,7 @@ func TestGo(t *testing.T) {
 	for name, tc := range testCases {
 		name, tc := name, tc
 		t.Run(name, func(t *testing.T) {
-			err := ctx.Go(tc.ctx, tc.cb)
+			err := ctxutils.Go(tc.ctx, tc.cb)
 			r.Equal(tc.want, err)
 		})
 	}
