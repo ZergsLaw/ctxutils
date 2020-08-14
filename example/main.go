@@ -5,19 +5,19 @@ import (
 	"log"
 	"time"
 
-	"github.com/ZergsLaw/ctx"
+	"github.com/ZergsLaw/ctxutils"
 )
 
 const timeout = time.Second
 
 func main() {
 
-	c, cancel := context.WithTimeout(context.Background(), timeout)
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 
 	res := make(chan string, 1)
 
-	err := ctx.Go(c, func(c context.Context) error {
+	err := ctxutils.Go(ctx, func(ctx context.Context) error {
 		str, err := LongRunningProcess()
 		if err != nil {
 			return err
