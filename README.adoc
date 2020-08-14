@@ -10,7 +10,7 @@ If you have questions about this application, there was a bug or there are sugge
 == Install.
 
 ----
-go get -v github.com/ZergsLaw/ctx
+go get -v github.com/ZergsLaw/ctxutils
 ----
 
 == Utils for working with context and goroutines.
