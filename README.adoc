@@ -17,30 +17,43 @@ go get -v github.com/ZergsLaw/ctxutils
 
 [source,go]
 ----
+package main
 
-ctx, cancel := context.WithTimeout(context.Background(), timeout)
-defer cancel()
+import (
+	"context"
+	"log"
+	"time"
 
-res := make(chan string, 1)
+	"github.com/ZergsLaw/ctxutils"
+)
 
-err := ctxutils.Go(ctx, func(ctx context.Context) error {
-	str, err := LongRunningProcess()
+const timeout = time.Second
+
+func main() {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+
+	res := ""
+
+	err := ctxutils.Go(ctx, func(ctx context.Context) error {
+		var err error
+		res, err = LongRunningProcess()
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
+
 	if err != nil {
-		return err
+		log.Fatal("very long process ", err)
 	}
 
-	res <- str
-	return nil
-})
-
-
-if err != nil {
-	log.Fatal("very long process ", err)
+	log.Println(res)
 }
 
-
 func LongRunningProcess() (string, error) {
-    time.Sleep(5 * time.Second)
-    return "Hello, bro!", nil
+	time.Sleep(5 * time.Second)
+	return "Hello, bro!", nil
 }
 ----

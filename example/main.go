@@ -11,19 +11,18 @@ import (
 const timeout = time.Second
 
 func main() {
-
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 
-	res := make(chan string, 1)
+	res := ""
 
 	err := ctxutils.Go(ctx, func(ctx context.Context) error {
-		str, err := LongRunningProcess()
+		var err error
+		res, err = LongRunningProcess()
 		if err != nil {
 			return err
 		}
 
-		res <- str
 		return nil
 	})
 
@@ -31,6 +30,7 @@ func main() {
 		log.Fatal("very long process ", err)
 	}
 
+	log.Println(res)
 }
 
 func LongRunningProcess() (string, error) {

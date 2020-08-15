@@ -64,11 +64,3 @@ func TestGo(t *testing.T) {
 		})
 	}
 }
-
-func cb() error {
-	return nil
-}
-
-func notSuccessCb() error {
-	return io.EOF
-}
