@@ -20,10 +20,12 @@ func TestGo(t *testing.T) {
 	r := require.New(t)
 
 	var (
-		stdCtx             = context.Background()
-		timeOutCtx, cancel = context.WithTimeout(context.Background(), timeout)
+		stdCtx                    = context.Background()
+		timeOutCtx, timeoutCancel = context.WithTimeout(context.Background(), timeout)
+		canceledCtx, cancelCtx    = context.WithCancel(context.Background())
 	)
-	defer cancel()
+	cancelCtx()
+	defer timeoutCancel()
 
 	success := func(c context.Context) error {
 		t.Helper()
@@ -51,9 +53,10 @@ func TestGo(t *testing.T) {
 		cb   func(context.Context) error
 		want error
 	}{
-		"success":           {stdCtx, success, nil},
-		"not_success":       {stdCtx, notSuccess, expectedErr},
-		"very_long_process": {timeOutCtx, veryLongProcess, context.DeadlineExceeded},
+		"success":             {stdCtx, success, nil},
+		"not_success":         {stdCtx, notSuccess, expectedErr},
+		"very_long_process":   {timeOutCtx, veryLongProcess, context.DeadlineExceeded},
+		"context_is_canceled": {canceledCtx, notSuccess, context.Canceled},
 	}
 
 	for name, tc := range testCases {
