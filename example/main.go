@@ -16,7 +16,7 @@ func main() {
 
 	res := ""
 
-	err := ctxutils.Go(ctx, func(ctx context.Context) error {
+	err := ctxutils.Go(ctx, func() error {
 		var err error
 		res, err = LongRunningProcess()
 		if err != nil {

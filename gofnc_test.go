@@ -27,22 +27,19 @@ func TestGo(t *testing.T) {
 	cancelCtx()
 	defer timeoutCancel()
 
-	success := func(c context.Context) error {
+	success := func() error {
 		t.Helper()
-		r.Equal(stdCtx, c)
 		return nil
 	}
 
 	expectedErr := io.EOF
-	notSuccess := func(c context.Context) error {
+	notSuccess := func() error {
 		t.Helper()
-		r.Equal(stdCtx, c)
 		return expectedErr
 	}
 
-	veryLongProcess := func(c context.Context) error {
+	veryLongProcess := func() error {
 		t.Helper()
-		r.Equal(timeOutCtx, c)
 
 		time.Sleep(longProcess)
 		return nil
@@ -50,7 +47,7 @@ func TestGo(t *testing.T) {
 
 	testCases := map[string]struct {
 		ctx  context.Context
-		cb   func(context.Context) error
+		cb   func() error
 		want error
 	}{
 		"success":             {stdCtx, success, nil},
